@@ -15,6 +15,9 @@
             <if test="sex!= null and sex!= ''">
                 sex = #{sex},
             </if>
+            <if test="username!= null and username!= ''">
+                username = #{username},
+            </if>
             <if test="phone!= null">
                 phone = #{phone},
             </if>

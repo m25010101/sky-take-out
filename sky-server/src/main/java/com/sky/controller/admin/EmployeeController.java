@@ -90,10 +90,24 @@ public class EmployeeController {
         PageResult pageResult = employeeService.pageQuery(employeePageQueryDTO);
         return Result.success(pageResult);
     }
+
     @ApiOperation("修改员工状态")
     @PostMapping("/status/{status}")
-    public Result updateStatus(@PathVariable("status") Integer status,Long id){
-        employeeService.updateStatus(status,id);
+    public Result updateStatus(@PathVariable("status") Integer status, Long id) {
+        employeeService.updateStatus(status, id);
+        return Result.success();
+    }
+
+    @ApiOperation("根据id查询员工")
+    @GetMapping("/{id}")
+    public Result<Employee> queryById(@PathVariable Long id) {
+        Employee employee = employeeService.queryById(id);
+        return Result.success(employee);
+    }
+    @ApiOperation("修改员工信息")
+    @PutMapping
+    public Result updateEmployee(@RequestBody EmployeeDTO employeeDTO) {
+        employeeService.updateEmployee(employeeDTO);
         return Result.success();
     }
 }
