@@ -3,9 +3,37 @@
 <mapper namespace="com.sky.mapper.DishMapper">
 
     <insert id="insert" parameterType="com.sky.entity.Dish" useGeneratedKeys="true" keyProperty="id">
-        insert into dish (name, category_id, price, image, description, create_time, update_time, create_user, update_user)
-            values (#{name},#{categoryId},#{price},#{image},#{description},#{createTime},#{updateTime},#{createUser},#{updateUser} )
+        insert into dish (name, category_id, price, image, description, create_time, update_time, create_user,
+                          update_user)
+        values (#{name}, #{categoryId}, #{price}, #{image}, #{description}, #{createTime}, #{updateTime}, #{createUser},
+                #{updateUser})
     </insert>
+    <update id="updateByID" parameterType="dish" >
+        update dish
+        <set>
+            <if test="name!=null">
+                name = #{name},
+            </if>
+            <if test="categoryId!=null">
+                    category_id = #{categoryId},
+            </if>
+            <if test="price!=null">
+                    price = #{price},
+            </if>
+            <if test="image!=null">
+                    image = #{image},
+            </if>
+            <if test="description!=null">
+                    description = #{description},
+            </if>
+            <if test="status!=null">
+                    status = #{status},
+            </if>
+        </set>
+        <where>
+            id=#{id}
+        </where>
+    </update>
     <select id="query" resultType="com.sky.vo.DishVO" parameterType="com.sky.dto.DishPageQueryDTO">
         select dish.* ,category.name as categoryName from dish left join category on dish.category_id = category.id
         <where>
@@ -19,5 +47,19 @@
                 and dish.status=#{status}
             </if>
         </where>
+    </select>
+    <resultMap id="DishWithFlavor" type="com.sky.dto.DishDTO">
+        <id property="id" column="id"/>
+        <result property="description" column="description"/>
+        <result property="image" column="image"/>
+        <result property="name" column="name"/>
+        <result property="price" column="price"/>
+        <result property="status" column="status"/>
+        <collection property="flavors" column="id" ofType="dishFlavor" select="com.sky.mapper.FlavorMapper.selectFlavorByDishId"/>
+    </resultMap>
+    <select id="queryByIdWithFlavor" resultMap="DishWithFlavor" parameterType="Long">
+        select *
+        from dish
+        where id = #{id}
     </select>
 </mapper>
