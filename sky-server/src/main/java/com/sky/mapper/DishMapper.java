@@ -38,8 +38,22 @@ public interface DishMapper {
     void deleteById(Long id);
 
     DishDTO queryByIdWithFlavor(Long id);
+    /**
+     * 根据套餐id查询菜品
+     * @param setmealId
+     * @return
+     */
+    @Select("select a.* from dish a left join setmeal_dish b on a.id = b.dish_id where b.setmeal_id = #{setmealId}")
+    List<Dish> getBySetmealId(Long setmealId);
 
 
     @AutoFill(OperationType.UPDATE)
     void updateByID(Dish dish);
+    /**
+     * 动态条件查询菜品
+     * @param dish
+     * @return
+     */
+    List<Dish> list(Dish dish);
+
 }

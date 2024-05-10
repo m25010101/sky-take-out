@@ -12,7 +12,7 @@ import com.sky.entity.Setmeal;
 import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.FlavorMapper;
-import com.sky.mapper.SetMealDishMapper;
+import com.sky.mapper.SetmealDishMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
@@ -31,7 +31,9 @@ public class DishServiceImpl implements DishService {
     @Autowired
     private FlavorMapper flavorMapper;
     @Autowired
-    private SetMealDishMapper setMealDishMapper;
+    private SetmealDishMapper setMealDishMapper;
+    @Autowired
+    private FlavorMapper dishFlavorMapper;
 
     @Override
     @Transactional
@@ -98,7 +100,7 @@ public class DishServiceImpl implements DishService {
             BeanUtils.copyProperties(d,dishVO);
 
             //根据菜品id查询对应的口味
-            List<DishFlavor> flavors = dishFlavorMapper.getByDishId(d.getId());
+            List<DishFlavor> flavors = dishFlavorMapper.selectFlavorByDishId(d.getId());
 
             dishVO.setFlavors(flavors);
             dishVOList.add(dishVO);
@@ -106,4 +108,19 @@ public class DishServiceImpl implements DishService {
 
         return dishVOList;
     }
+
+    /**
+     * 根据分类id查询菜品
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public List<Dish> list(Long categoryId) {
+        Dish dish = Dish.builder()
+                .categoryId(categoryId)
+                .status(StatusConstant.ENABLE)
+                .build();
+        return dishMapper.list(dish);
+    }
+
 }
